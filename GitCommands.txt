@@ -1,0 +1,67 @@
+***************GIT COMMANDS*****************
+
+TO check version of git
+***********************
+git --version
+clear
+
+Configuring Git 
+***************
+1. git config --global user.name "USER_NAME"
+2. git config --global user.email "EMAIL_id"
+3. git config --list 
+
+INSIDE VS CODE
+*****************
+
+* Open terminal.
+
+1. clone: cloning a repository on our local machine
+
+Syntax: git clone (github project link)
+
+2. git status: displays the state of the code
+
+Syntax: git status  
+
+*change the directory by using (cd file name)[to go back to previous folder use- cd..]
+
+3. ls : list files(normal files)
+
+4. ls -a : (hidden files)
+
++++status of the git
+----------------------
+
+a) untracked: new files that git doesnt yet tracked.
+
+b) modified: changed.
+
+c) staged: file is ready to be commited.
+
+d) unmodified: unchanged.
+
+5.  Add&Commit
+--------------------
+
++add: adds new or changed files in your working directory to the git staging area.
+
+Syntax: git add file_name.type
+
++commit: it is a record of change.
+
+Syntax: git commit -m "write the details about the changes".
+
+6. Push
+--------
++push:  upload local repository content to remote(github) repository.
+
+Syntax: git push origin main
+
+
+
+
+
+
+
+
