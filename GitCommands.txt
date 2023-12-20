@@ -5,7 +5,7 @@ TO check version of git
 git --version
 clear
 
-Configuring Git 
+Configuring Git(In GitBash for windows)  
 ***************
 1. git config --global user.name "USER_NAME"
 2. git config --global user.email "EMAIL_id"
