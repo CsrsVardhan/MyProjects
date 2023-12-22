@@ -1,0 +1,461 @@
+CREATING A VARIABLE
+*************************
+
+declare
+a number(10);
+begin
+a:=10;
+end;
+/
+
+TO EXCUTE THE PROGRAM ON PLSQL
+*****************************************
+set serveroutput on;
+
+declare
+a number(10);
+begin
+a:=10;
+dbms_output.put_line(a);
+end;
+/
+
+
+HOW TO CHECK THE PASSWORD AND USER-ID IS MATCHED IN THE DATABASE OR NOT
+**********************************************************************************************
+
+declare
+
+user_id users.user_id%type;
+password users.password%type;
+u_id users.user_id%type:=&u_id;
+pass users.password%type :=&pass;
+
+begin
+
+select user_id,password into user_id,password from users
+where user_id=u_id;
+
+if user_id=u_id then
+
+	 if password=pass then
+  		dbms_output.put_line('user matched and password matched');
+ 	else
+  		dbms_output.put_line('user matched and password not matched');
+ 	end if;
+else
+	dbms_output.put_line('user not matched');
+end if;
+
+end;
+/
+
+HOW TO CHANGE THE PASSWORD , IF USER_ID AND PASSWORD ARE MATCHED
+**************************************************************************************
+
+ declare
+
+ user_id users.user_id%type;
+ password users.password%type;
+ u_id users.user_id%type:=&u_id((or)'&u_id');
+ pass users.password%type :=&pass((or)'&pass');
+npwd users.password%type :=&npwd((or)&'npwd');
+
+ begin
+
+ select user_id,password into user_id,password 
+from users
+where user_id=u_id;
+
+if user_id=u_id then
+
+	if password=pass then
+            		dbms_output.put_line('user matched and password matched');
+
+           		 update users set password=npwd where user_id=u_id;
+		commit;
+		dbms_output.put_line('password updated');
+    	else
+            		dbms_output.put_line('Invalid password');
+   	end if;
+ else
+    	dbms_output.put_line('Invalid user');
+ end if;
+
+ end;
+ /
+
+HOW TO USE ELSE IF
+**********************
+
+Syntax: ELSIF.
+
+
+There are four types of looping statements in loops. They are: 1. simple loop, 2. while loop, 3. number for loop, 4. cusor for loop.
+
+we can exit the loop in two ways, they are using 1. exit, 2. exit when
+
+HOW TO USE SIMPLE LOOP
+******************************
+
+declare
+a number :=0;
+begin
+loop
+a:=a+1;
+dbms_output.put_line(19*a);
+exit when a>=12;
+end loop;
+end;
+/
+
+HOW TO CREATE SINGLE TRIGGER
+*************************************
+
+create or replace trigger trigger_name 
+before or after insert or update or delete on tablename
+for each row
+begin
+dbms_output.put_line('statement'||user);
+end;
+
+HOW TO CREATE A MULTIPLE TRIGGERS AT SAME TIME
+************************************************************
+
+create or replace trigger trigger_name
+before or after insert or update or delete on tablename
+for each row
+begin
+if inserting then
+dbms_output.put_line('statement'||user);
+elsif updating then
+dbms_output.put_line('statement'||user);
+elsif deleting then
+dbms_output.put_line('statement'||user);
+end if;
+end;
+/
+
+HOW TO PERFORM TABLE AUDIT
+************************************
+
+create table useraudit
+(
+new_userid varchar(20),
+old_userid varchar(20),
+username varchar(20),
+change_date date,
+operation varchar(20),
+new_pass varchar(20),
+old_pass varchar(20));
+
+ created.
+
+create table users
+(
+user_id varchar(20),
+password varchar(20));
+
+ created.
+
+create or replace trigger trigger1
+before insert or update or delete on users
+for each row
+begin
+if inserting then
+Insert into useraudit values(:new.user_id,null,user,current_date,'INSERT',:new.password,null);
+elsif updating then
+insert into useraudit values(:new.user_id,:old.user_id,user,current_date,'UPDATE',:new.password,:old.password);
+elsif deleting then
+insert into useraudit values(null,:old.user_id,user,current_date,'DELETE',null,:old.password);
+end if;
+end;
+/
+
+CREATE OR REPLACE TRIGGER SH_AUDIT (SH_AUDIT IS trigger_name)
+BEFORE INSERT OR UPDATE OR DELETE ON SUPERHERO
+FOR EACH ROW
+BEGIN
+IF INSERTING THEN
+INSERT INTO SH_AUDIT VALUES(:NEW.SH_MAME,NULL,USER,SYSDATE,' INSERT');
+ELSIF UPDATING THEN
+INSERT INTO SH_AUDIT VALUES(:NEW.SH_HAME, :OLD.SH_NAME,USER,SYSDATE, 'UPDATE");
+ELSIF DELETING THEN
+INSERT INTO SH_AUDIT VALUES(NULL, :OLD.SH_NAME,USER,SYSDATE, 'DELETE*);
+END IF;
+END;
+/
+
+HOW TO CREATE CURSOR AND USE IT
+*****************************************
+
+declare 
+a_name varchar(20);
+a_deptno number:=&a_deptno;
+(--declare cursor)
+cursor cursor_name is
+select ename
+from emp
+where deptno=a_deptno;
+begin
+open cursor_name;
+loop
+fetch cursor_name into a_name;
+exit when cursor_name%notfound;
+dbms_output.put_line(a_name);
+end loop;
+close cursor_name;
+end;
+/
+
+
+Q. write a pl/sql query to display name and salary of the employee who are working in particular deptno by getting value  from the user.
+****************************************************************************************************************************************
+
+A.
+
+declare 
+a_name varchar(20);
+a_sal number;
+a_deptno number:=&a_deptno;
+(--declare cursor)
+cursor cursor_name is
+select ename,sal
+from emp
+where deptno=a_deptno;
+begin
+open cursor_name;
+loop
+fetch cursor_name into a_name,a_sal;
+exit when cursor_name%notfound;
+dbms_output.put_line(a_name);
+end loop;
+close cursor_name;
+end;
+/ 
+
+declare
+name varchar(20);
+cursor get_name(dept number) is
+select ename
+from emp
+where deptno=dept;
+begin
+open get_name(&deptno)
+loop
+fetch get_name into name;
+exit when get_name%notfound;
+dbms_output.put_line(name);
+end loop;
+end;
+/
+
+HOW TO USE CURSOR LOOP
+*******************************
+
+SYNTAX: 
+*********
+
+DECLARE 
+WRITE REQUIRED VARIABLES
+CURSOR CURSOR_NAME IS
+WRITE THE QUERY 
+BEGIN
+FOR VAR_NAME IN CURSOR_NAME LOOP
+DBMS_OUTPUT.PUT_LINE(VAR_NAME.REQUIRED VARIABLES);
+END LOOP;
+END;
+/
+
+EXAMPLE:
+***********
+
+declare 
+a_dept number:=&deptno;
+cursor get_name is
+select ename
+from emp
+where deptno=a_dept;
+begin
+for var in get_name loop
+dbms_output.put_line(var.ename);
+end loop;
+end;
+/
+
+
+HOW TO AUTO UPDATE DATE OF BIRTH WITH TRIGGER
+*************************************************************
+
+IN THE STUDENTS TABLE WE HAVE THREE COLUMNS WHENEVER WE INSERT THE VALUE THE 
+DOB WILL AUTO MATICALLY UPDATE.
+COLUMNS NAMES ARE: STU_ID,DOB,AGE.
+
+CREATE OR REPLACE TRIGGER DOB
+BEFORE INSERT OR UPDATE ON STUDENT
+FOR EACH ROW 
+BEGIN
+ :NEW.AGE:=TRUNC(MONTHS_BETWEEN(CURRENT_DATE,:NEW.DOB)/12);
+END;
+/
+
+
+HOW TO CREATE A PROCEDURE EXAMPLE
+**********************************************
+
+CREATE OR REPLACE PROCEDURE UP_SAL
+(E_EMPNO IN EMP.EMPNO%TYPE,
+AMT IN NUMBER)
+IS
+BEGIN
+UPDATE EMP
+SET SAL=SAL+AMT
+WHERE EMPNO=E_EMPNO;
+COMMIT;	
+END;
+/
+
+HOW TO USE PROCEDURE
+*****************************
+
+EXECUTE PROCEDURENAME(ARGUMENTS);
+
+OR 
+
+EXEC PROCEDURENAME(ARGUMENTS);
+
+
+HOW TO CREATE DISCOUNT AUTOUPDATE
+***********************************************
+
+CREATE OR REPLACE TRIGGER DISCOUNT
+BEFORE INSERT OR UPDATE ON PRODS
+FOR EACH ROW 
+BEGIN
+ :NEW.D_PRICE:=:NEW.PRICE-(:NEW.PRICE*:NEW.DISCOUNT/100);
+END;
+/
+
+
+HOW TO INSERT INTO PRODS USING PROCEDURE AUTOMATICALLY
+*************************************************************************
+
+CREATE OR REPLACE PROCEDURE AUTOPRODSINSERT
+(PID IN PRODS.PRO_ID%TYPE,
+P_NAME IN PRODS.PRO_NAME%TYPE,
+P_PRICE IN PRODS.PRICE%TYPE,
+P_DISCOUNT IN PRODS.DISCOUNT%TYPE)
+IS
+ID NUMBER;
+NAME VARCHAR(20);
+COST NUMBER;
+DIS NUMBER;
+D_COST NUMBER;
+BEGIN
+INSERT INTO PRODS VALUES(PID,P_NAME,P_PRICE,P_DISCOUNT,NULL);
+COMMIT;
+SELECT PRO_ID,PRO_NAME,PRICE,DISCOUNT,D_PRICE INTO ID,NAME,COST,DIS,D_COST
+FROM PRODS
+WHERE PRO_ID=PID;
+DBMS_OUTPUT.PUT_LINE(ID||' '||NAME||' '||COST||' '||DIS||' '||D_COST);
+END;
+/
+
+
+HOW TO UPDATE DISCOUNT USING PROCEDURE AUTOMATICALLY
+************************************************************************
+
+CREATE OR REPLACE PROCEDURE AUTOUPDATEDISCOUNT
+(
+DISC IN PRODS.DISCOUNT%TYPE,
+PID PRODS.PRO_ID%TYPE)
+IS
+ID NUMBER;
+NAME VARCHAR(20);
+COST NUMBER;
+DIS NUMBER;
+D_COST NUMBER;
+BEGIN
+UPDATE PRODS
+SET DISCOUNT=DISC
+WHERE PRO_ID=PID;
+COMMIT;
+SELECT PRO_ID,PRO_NAME,PRICE,DISCOUNT,D_PRICE INTO ID,NAME,COST,DIS,D_COST
+FROM PRODS
+WHERE PRO_ID=PID;
+DBMS_OUTPUT.PUT_LINE(ID||' '||NAME||' '||COST||' '||DIS||' '||D_COST);
+END;
+/
+
+
+HOW TO UPDATE PRICE USING PROCEDURE AUTOMATICALLY
+*******************************************************************
+
+CREATE OR REPLACE PROCEDURE AUTOUPDATEPRICE
+(
+DISC IN PRODS.DISCOUNT%TYPE,
+PID PRODS.PRO_ID%TYPE)
+IS
+ID NUMBER;
+NAME VARCHAR(20);
+COST NUMBER;
+DIS NUMBER;
+D_COST NUMBER;
+BEGIN
+UPDATE PRODS
+SET DISCOUNT=DISC
+WHERE PRO_ID=PID;
+COMMIT;
+SELECT PRO_ID,PRO_NAME,PRICE,DISCOUNT,D_PRICE INTO ID,NAME,COST,DIS,D_COST
+FROM PRODS
+WHERE PRO_ID=PID;
+DBMS_OUTPUT.PUT_LINE(ID||' '||NAME||' '||COST||' '||DIS||' '||D_COST);
+END;
+/
+
+HOW TO USE DQL STATEMENT USING PROCEDURE AND CURSOR
+**********************************************************************
+
+create or replace procedure empname(dept number)
+is 
+cursor get_name is
+select ename
+from emp
+where deptno=dept;
+begin
+for i in get_name loop
+dbms_output.put_line(i.ename);
+end loop;
+end;
+/
+
+create or replace procedure empjobnamesal(jobs emp.job%type)
+is 
+cursor get_name is
+select ename,job,sal
+from emp
+where job=jobs;
+begin
+for i in get_name loop
+dbms_output.put_line(i.ename||' '||i.job||' '||i.sal);
+end loop;
+end;
+/
+
+CREATE OR REPLACE PROCEDURE EMPUPDATESAL
+(ENO EMP.EMPNO%TYPE,
+SALARY EMP.SAL%TYPE)
+IS
+NAME EMP.ENAME%TYPE;
+NEWSAL EMP.SAL%TYPE;
+BEGIN
+UPDATE EMP
+SET SAL=SALARY
+WHERE EMPNO=ENO;
+COMMIT;
+SELECT ENAME,SAL INTO NAME,NEWSAL
+FROM EMP
+WHERE EMPNO=ENO;
+DBMS_OUTPUT.PUT_LINE(NAME||'THE NEW SALARY IS '||NEWSAL);
+END;
+/
